@@ -11,6 +11,7 @@ export async function apiFetch(path, options = {}) {
   };
 
   const res = await fetch(`${API}${path}`, { 
+    cache: "no-store",
     ...options, 
     headers
   });
@@ -24,7 +25,10 @@ export async function apiFetch(path, options = {}) {
   }
 
   if (!res.ok) {
-    throw new Error(data?.error || data?.message || "Request failed");
+    const errorMsg = typeof data?.error === "string" 
+      ? data.error 
+      : (data?.message || "Request failed");
+    throw new Error(errorMsg);
   }
   
   return data;
